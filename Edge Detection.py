@@ -32,6 +32,8 @@ def find_edges(original, threshold = 50, noise = 0, mode = "grad_black",
     
     if mode == "grad_black":
         image = Im.new("RGB", (orig.width, orig.height), (0, 0, 0))
+    elif mode == "on_white":
+        image = Im.new("RGB", (orig.width, orig.height), (255, 255, 255))
     elif mode == "overlay":
         image = Im.open(original)
 
@@ -64,7 +66,7 @@ def find_edges(original, threshold = 50, noise = 0, mode = "grad_black",
     image.paste(ret_3, (bounds_3[0], 0))
     image.paste(ret_4, (bounds_4[0], 0))
 
-    name.replace("\\", "/")
+    original = original.replace("/", "\\")
     if "/" not in name:
         name = original[::-1][original[::-1].find("\\"):][::-1] + name
         
