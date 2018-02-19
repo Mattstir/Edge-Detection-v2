@@ -2,7 +2,12 @@
 
 [One Paragraph of project description goes here]
 A program which finds and highlights the edges in an image using differences in colour values.
-![Original image](https://i.imgur.com/S5ACk9W.jpg)
+The function which processes the images, `find_edges` accepts a variety of modes listed below.
+#### Mode: grad_black (Gradient Black)
+| Original      | grad_black    |
+|:-------------:|:-------------:|
+|![Original image](https://i.imgur.com/S5ACk9W.jpg) | ![grad_black](https://i.imgur.com/rgg0wKL.jpg) |
+
 
 ## Usage
 
