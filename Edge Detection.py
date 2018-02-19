@@ -14,7 +14,7 @@ def remove_extension(filepath):
 
 
 def find_edges(original, threshold = 50, noise = 0, mode = "grad_black",
-               name = "edges.jpg"):
+               name = "edges.png"):
     """
     original  : str : filepath to original image
     threshold : int : minimum delta requirement for pixel to be considered
@@ -66,9 +66,8 @@ def find_edges(original, threshold = 50, noise = 0, mode = "grad_black",
     image.paste(ret_3, (bounds_3[0], 0))
     image.paste(ret_4, (bounds_4[0], 0))
 
-    original = original.replace("/", "\\")
-    if "/" not in name:
-        name = original[::-1][original[::-1].find("\\"):][::-1] + name
+    original = os.path.abspath(original)
+    name = original[::-1][original[::-1].find("\\"):][::-1] + name
         
     image.save(name)
 
@@ -125,6 +124,74 @@ def remove_noise(filepath, threshold = 10):
     image.save(image.filename)
     
     return data
+
+
+def find_importance(original, threshold = 50, noise = 0, grid_size = 100,
+                    grid_sens = 3000):
+    """
+    Attempts to display only the important sections of an image
+    original  : str : filepath to original image
+    threshold : int : minimum delta requirement for pixel to be considered
+                      an 'edge'
+    noise     : int : maximum delta require for pixel to be considered an
+                      'edge' ; essentially removes low valued edges
+    grid_size : int : fraction of the total length/width which is considered
+                      part of one grid space (ex. grid_size = 100 cuts the image
+                      into 100 x 100 grid)
+    grid_sens : int : the threshold for which a grid space must exceed to be
+                      considered important
+    """
+    orig_image = Im.open(original)
+    create_edges = False
+    
+    if os.path.exists("edges.png"):
+        image = Im.open("edges.png")
+        if not (image.width == orig_image.width and \
+           image.height == orig_image.height):
+            create_edges = True
+    if create_edges:
+        print("Finding edges...")
+        find_edges(original, threshold, noise, "grad_black", "edges.png")
+    image = Im.open("edges.png")
+    importance = Im.new("RGB", (image.width, image.height))
+    
+
+    data = image.load()
+    orig_data = orig_image.load()
+    importance_data = importance.load()
+
+    grid_space = [[0 for l in range(grid_size)] for w in range(grid_size)]
+
+    print("Finding grid deltas...")
+    for x in range(image.width - 1):
+        for y in range(image.height - 1):
+            x_value = x // (image.width // grid_size + 1)
+            y_value = y // (image.height // grid_size + 1)
+            #print(x_value, y_value)
+            grid_space[x_value][y_value] += data[x,y][0]
+
+    print("Applying grid deltas...")
+    for x in range(image.width - 1):
+        for y in range(image.height - 1):
+            x_value = x // (image.width // grid_size + 1)
+            y_value = y // (image.height // grid_size + 1)
+            try:
+                if grid_space[x_value][y_value] > grid_sens:
+                    importance_data[x,y] = orig_data[x,y]
+                
+                elif grid_space[x_value-1][y_value] > grid_sens and \
+                     grid_space[x_value+1][y_value] > grid_sens and \
+                     grid_space[x_value][y_value-1] > grid_sens and \
+                     grid_space[x_value][y_value+1] > grid_sens:
+                    ## Fill in grid_space if all spaces around are filled
+                    importance_data[x,y] = orig_data[x,y]
+            except IndexError:
+                ##x_value-1, +1, etc. out of bounds
+                None
+
+    importance.save("importance.png")
+
+    return grid_space
 
 
 def get_file():
