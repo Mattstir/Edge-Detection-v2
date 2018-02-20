@@ -2,20 +2,10 @@
 
 A program which finds and highlights the edges in an image using differences in colour values.
 The function which processes the images, `find_edges` accepts a variety of modes listed below.
-### Mode: grad_black (Gradient Black)
-| Original      | grad_black    |
-|:-------------:|:-------------:|
-|![Original image](https://i.imgur.com/S5ACk9W.jpg) | ![grad_black](https://i.imgur.com/rgg0wKL.jpg) |
-
-### Mode: on_white (Gradient White)
-| Original      | on_white      |
-|:-------------:|:-------------:|
-|![Original image](https://i.imgur.com/S5ACk9W.jpg) | ![on_white](https://i.imgur.com/OEqrsDZ.jpg) |
-
-### Mode: overlay (Gradient Overlayed on Original)
-| Original      | overlay       |
-|:-------------:|:-------------:|
-|![Original image](https://i.imgur.com/S5ACk9W.jpg) | ![overlay](https://i.imgur.com/6EtNgqd.jpg) |
+### Modes: grad_black (Gradient Black), on_white (Gradient White), and overlay (Gradient Overlayed on Original)
+|![Original image](https://i.imgur.com/S5ACk9W.jpg) |![grad_black](https://i.imgur.com/rgg0wKL.jpg)|
+|![Original image](https://i.imgur.com/S5ACk9W.jpg) |![on_white](https://i.imgur.com/OEqrsDZ.jpg)  |
+|![Original image](https://i.imgur.com/S5ACk9W.jpg) |![overlay](https://i.imgur.com/6EtNgqd.jpg)   |
 
 
 ## Usage
